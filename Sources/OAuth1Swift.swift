@@ -17,6 +17,13 @@ open class OAuth1Swift: OAuthSwift {
     /// Optionally add callback URL to authorize Url (default: false)
     open var addCallbackURLToAuthorizeURL: Bool = false
 
+    /// Optionally configure the authorize url parameterization.
+    open var authorizeURLParameterization: [AuthorizeURLParameter : String]?
+
+    public enum AuthorizeURLParameter {
+        case token, key
+    }
+
     var consumerKey: String
     var consumerSecret: String
     var requestTokenUrl: String
@@ -98,7 +105,16 @@ open class OAuth1Swift: OAuthSwift {
             // 2. Authorize
             if let token = credential.oauthToken.urlQueryEncoded {
                 var urlString = self.authorizeUrl + (self.authorizeUrl.contains("?") ? "&" : "?")
-                urlString += "oauth_token=\(token)"
+                var tokenParameter = "oauth_token"
+                var keyParameter: String?
+                if let parameters = self.authorizeURLParameterization {
+                    tokenParameter = parameters[.token] ?? tokenParameter
+                    keyParameter = parameters[.key] ?? keyParameter
+                }
+                urlString += "\(tokenParameter)=\(token)"
+                if let keyParam = keyParameter, credential.consumerKey.count > 0 {
+                    urlString += "&\(keyParam)=\(credential.consumerKey)"
+                }
                 if self.addCallbackURLToAuthorizeURL {
                     urlString += "&oauth_callback=\(callbackURL.absoluteString)"
                 }
