@@ -84,6 +84,8 @@ open class OAuth1Swift: OAuthSwift {
                 }
                 if let token = responseParameters["token"] {
                     responseParameters["oauth_token"] = token
+                } else if this.client.credential.oauthToken.count > 0 {
+                    responseParameters["oauth_token"] = this.client.credential.oauthToken
                 }
 
                 if let token = responseParameters["oauth_token"] {
