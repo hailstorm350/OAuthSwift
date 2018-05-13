@@ -148,7 +148,7 @@ open class OAuth1Swift: OAuthSwift {
         var parameters = [String: Any]()
         parameters["oauth_callback"] = callbackURL.absoluteString
 
-        if let handle = self.client.post(
+        if let handle = self.client.get(
             self.requestTokenUrl, parameters: parameters,
             success: { [weak self] response in
                 guard let this = self else { OAuthSwift.retainError(failure); return }
@@ -174,7 +174,7 @@ open class OAuth1Swift: OAuthSwift {
             parameters["oauth_verifier"] = self.client.credential.oauthVerifier
         }
 
-        if let handle = self.client.post(
+        if let handle = self.client.get(
             self.accessTokenUrl, parameters: parameters,
             success: { [weak self] response in
                 guard let this = self else { OAuthSwift.retainError(failure); return }
