@@ -9,6 +9,7 @@
 import Foundation
 
 let kHTTPHeaderContentType = "Content-Type"
+let kHTTPRequestDispatchQueue = "kHTTPRequestDispatchQueue"
 
 open class OAuthSwiftHTTPRequest: NSObject, OAuthSwiftRequestHandle {
 
@@ -39,7 +40,7 @@ open class OAuthSwiftHTTPRequest: NSObject, OAuthSwiftRequestHandle {
     fileprivate var cancelRequested = false
 
     open static var executionContext: (@escaping () -> Void) -> Void = { block in
-        return DispatchQueue.main.async(execute: block)
+        return DispatchQueue(label: kHTTPRequestDispatchQueue).async(execute: block)
     }
 
     // MARK: INIT
